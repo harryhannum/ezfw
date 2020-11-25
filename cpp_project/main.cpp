@@ -1,3 +1,4 @@
+#include <cstdint>
 #include "ezfw/ezfw.hpp"
 
 namespace my_project
