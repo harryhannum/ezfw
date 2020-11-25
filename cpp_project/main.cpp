@@ -1,6 +1,21 @@
-#include <iostream>
+#include "ezfw/ezfw.hpp"
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
+namespace my_project
+{
+    namespace fpga_registers
+    {
+        namespace multiplier
+        {
+//            using Status = ACCESSOR::Register<ezfw::policies::ReadOnly, 0>;
+
+        }
+    }
+}
+
+int main()
+{
+    using Target = ezfw::MemoryTarget<uint32_t>;
+    ezfw::Accessor<Target> accessor;
+
     return 0;
 }
