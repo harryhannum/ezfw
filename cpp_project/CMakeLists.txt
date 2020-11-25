@@ -3,4 +3,7 @@ project(cpp_project)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(cpp_project main.cpp)
+include_directories(ezfw/include)
+
+file(GLOB sources *.c *.cpp)
+add_executable(cpp_project ${sources})
