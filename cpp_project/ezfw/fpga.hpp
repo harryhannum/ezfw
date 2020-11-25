@@ -23,9 +23,4 @@ namespace ezfw
     } // namespace fpga
 } // namespace ezfw
 
-
-#ifndef
-#define FPGA_READ_REG(addr) 0
-#define FPGA_WRITE_REG(addr, value)
-
 #endif //CPP_PROJECT_FPGA_HPP
