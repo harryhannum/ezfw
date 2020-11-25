@@ -8,15 +8,8 @@
 #include <cstdint>
 
 #ifndef USE_EZFW_SIMULATION
-#   define FPGA_READ_REG(addr) *((volatile uint32_t*) addr)
-#   define FPGA_WRITE_REG(addr, value) *((volatile uint32_t*) addr) = value
-
 #   define ACCESSOR ::ezfw::Accessor<::ezfw::MemoryTarget<uint32_t>>
 #else // ifdef USE_EZFW
-#   include "fpga.hpp"
-#   define FPGA_READ_REG(addr) ::ezfw::fpga::read_reg(addr)
-#   define FPGA_WRITE_REG(addr, value) ::ezfw::fpga::write_reg(addr, value)
-
 #   define ACCESSOR ::ezfw::Accessor<::ezfw::SimulatorTarget<uint32_t>>
 #endif // !USE_EZFW
 

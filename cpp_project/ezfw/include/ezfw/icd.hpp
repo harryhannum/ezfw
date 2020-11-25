@@ -18,15 +18,15 @@ namespace ezfw
             {
                 static constexpr uint8_t OPCODE = 0x37;
 
-                uint32_t addr;
-                uint32_t value;
+                uint64_t addr;
+                uint64_t value;
             };
 
             struct ReadRequest
             {
                 static constexpr uint8_t OPCODE = 0x77;
 
-                uint32_t addr;
+                uint64_t addr;
             };
         } // namespace request
 
@@ -41,7 +41,7 @@ namespace ezfw
             {
                 static constexpr uint8_t OPCODE = 0x7A;
 
-                uint32_t value;
+                uint64_t value;
             };
 
             struct Nack
