@@ -22,32 +22,33 @@ namespace ezfw {
         template<
             template<class T, size_t, T, size_t> class MutabilityPolicy,
             size_t Addr,
-            Target Mask = std::numeric_limits<Target::value_type>::max(),
+            Target Mask = std::numeric_limits<Target::ValueType>::max(),
             size_t Offset = 0>
         struct Register : public MutabilityPolicy<Target, Addr, Mask, Offset>
         {
-            static_assert(Offset < (CHAR_BIT * sizeof(Target::value_type)), "");
             static_assert(
-                (((Mask << Offset) & std::numeric_limits<Target::value_type>::max()) >> Offset) == Mask,
-                "");
+                    Offset < (CHAR_BIT * sizeof(Target::ValueType)), "Offset must not exceed the target value type");
+            static_assert(
+                    (((Mask << Offset) & std::numeric_limits<Target::ValueType>::max()) >> Offset) == Mask,
+                    "Mask must not exceed the target value type when offset");
         };
     };
 
     template<class T>
     struct MemoryTarget
     {
-        using value_type = std::remove_volatile_t<std::remove_const_t<T>>;
+        using ValueType = std::remove_volatile_t<std::remove_const_t<T>>;
 
         static_assert(
-            std::is_unsigned<value_type>::value,
+            std::is_unsigned<ValueType>::value,
             "Only unsigned types are suppported as a memory target");
 
-        static inline value_type read(size_t addr, value_type mask, size_t offset) {
-            return (*reinterpret_cast<const volatile value_type *>(addr) >> offset) & mask;
+        static inline ValueType read(size_t addr, ValueType mask, size_t offset) {
+            return (*reinterpret_cast<const volatile ValueType *>(addr) >> offset) & mask;
         }
 
-        static inline void write(size_t addr, value_type mask, size_t offse, value_type value) {
-            *reinterpret_cast<const volatile value_type *>(addr) = (value & mask) << offset;
+        static inline void write(size_t addr, ValueType mask, size_t offset, ValueType value) {
+            *reinterpret_cast<const volatile ValueType *>(addr) = (value & mask) << offset;
         }
     }
 
