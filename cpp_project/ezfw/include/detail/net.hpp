@@ -11,6 +11,9 @@
 #       pragma warning(disable : 4996)
 #   endif /* defined(_MSC_VER) */
 
+#   include <cstdlib>
+#   include <atomic>
+
 #   define WIN32_LEAN_AND_MEAN
 #   include <WinSock2.h>
 #   include <WS2tcpip.h>
@@ -18,7 +21,28 @@
 
 typedef SOCKET Socket;
 
-// static WSADATA g_wsadata;
+struct WsaInitialiser
+{
+    WsaInitialiser()
+    {
+        if ((_counter++ == 0) && (WSAStartup(0x101, &_wsadata) != 0))
+        {
+            std::abort();
+        }
+    }
+
+    ~WsaInitialiser()
+    {
+        if (--_counter)
+        {
+            WSACleanup();
+        }
+    }
+
+private:
+    static std::atomic<size_t> _counter;
+    static WSADATA _wsadata;
+};
 #else /* if !defined(_WIN32) */
 #   include <errno.h>
 #   include <sys/types.h>
@@ -35,6 +59,8 @@ typedef SOCKET Socket;
 
 typedef int Socket;
 typedef uint32_t socklen_t;
+
+struct WsaInitialiser {};
 #endif /* !defined(_WIN32) */
 
 #endif /* !NET_HPP */

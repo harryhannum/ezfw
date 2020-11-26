@@ -2,12 +2,11 @@
 
 #ifdef EZFW_SIMULATION
 
-#include "icd.hpp"
-
 #include <cstdio>
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
+#include "icd.hpp"
 
 #ifndef EZFW_SERVER_PORT
 #   define EZFW_SERVER_PORT 65432
@@ -21,7 +20,7 @@ namespace ezfw
         return _instance;
     }
 
-    FwSimulation::FwSimulation() : _socket(socket(AF_INET, SOCK_STREAM, IPPROTO_TCP))
+    FwSimulation::FwSimulation() : _socket_init{}, _socket{::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)}
     {
         if (_socket == INVALID_SOCKET)
         {
@@ -34,7 +33,7 @@ namespace ezfw
         server_addr.sin_addr.s_addr = htonl(0x7f000001); // 127.0.0.1
         server_addr.sin_port = htons(EZFW_SERVER_PORT);
 
-        if (connect(_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) != 0)
+        if (::connect(_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) != 0)
         {
             std::fprintf(stderr, "ERROR: failed to connect socket (%d)\n", errno);
             std::abort();
@@ -57,7 +56,7 @@ namespace ezfw
         icd::request::ReadRequest request{};
         request.addr = addr;
 
-        uint8_t buffer[sizeof(header) + sizeof(request)];
+        char buffer[sizeof(header) + sizeof(request)];
         memcpy(buffer, &header, sizeof(header));
         memcpy(buffer + sizeof(header), &request, sizeof(request));
 
@@ -79,7 +78,7 @@ namespace ezfw
             {
                 icd::response::ReadResponse response{};
 
-                if (recv(_socket, reinterpret_cast<char *>(&response), sizeof(response), 0) != sizeof(response))
+                if (::recv(_socket, reinterpret_cast<char *>(&response), sizeof(response), 0) != sizeof(response))
                 {
                     std::fprintf(stderr, "ERROR: failed to recv read response body\n");
                     std::abort();
@@ -92,7 +91,7 @@ namespace ezfw
             {
                 icd::response::Nack nack{};
 
-                if (recv(_socket, reinterpret_cast<char *>(&nack), sizeof(nack), 0) != sizeof(nack))
+                if (::recv(_socket, reinterpret_cast<char *>(&nack), sizeof(nack), 0) != sizeof(nack))
                 {
                     std::fprintf(stderr, "ERROR: failed to recv read response NACK body\n");
                 }
@@ -124,7 +123,7 @@ namespace ezfw
         request.addr = addr;
         request.value = value;
 
-        uint8_t buffer[sizeof(header) + sizeof(request)];
+        char buffer[sizeof(header) + sizeof(request)];
         memcpy(buffer, &header, sizeof(header));
         memcpy(buffer + sizeof(header), &request, sizeof(request));
 
@@ -149,7 +148,7 @@ namespace ezfw
             {
                 icd::response::Nack nack{};
 
-                if (recv(_socket, reinterpret_cast<char *>(&nack), sizeof(nack), 0) != sizeof(nack))
+                if (::recv(_socket, reinterpret_cast<char *>(&nack), sizeof(nack), 0) != sizeof(nack))
                 {
                     std::fprintf(stderr, "ERROR: failed to recv write response NACK body\n");
                 }
@@ -170,6 +169,33 @@ namespace ezfw
         }
 
         std::abort();
+    }
+
+    bool FwSimulation::register_irq_handler(uint8_t irq_id, IrqHandler handler)
+    {
+        std::lock_guard<std::mutex> _irq{_irq_mutex};
+
+        auto v = _irq_handlers.find(irq_id);
+
+        if (v != _irq_handlers.end())
+        {
+            return false;
+        }
+
+        _irq_handlers.emplace(irq_id, std::move(handler));
+        return true;
+    }
+
+    void FwSimulation::unregister_irq_handler(uint8_t irq_id)
+    {
+        std::lock_guard<std::mutex> _irq{_irq_mutex};
+
+        auto v = _irq_handlers.find(irq_id);
+
+        if (v != _irq_handlers.end())
+        {
+            _irq_handlers.erase(v);
+        }
     }
 } // namespace ezfw
 
