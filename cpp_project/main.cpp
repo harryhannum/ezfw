@@ -1,5 +1,5 @@
 #include <cstdint>
-#include "ezfw/ezfw.hpp"
+#include "ezfw.hpp"
 
 namespace cyder
 {

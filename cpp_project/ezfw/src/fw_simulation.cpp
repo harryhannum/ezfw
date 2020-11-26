@@ -1,4 +1,4 @@
-#include "ezfw/fw_simulation.hpp"
+#include "fw_simulation.hpp"
 
 #ifdef EZFW_SIMULATION
 

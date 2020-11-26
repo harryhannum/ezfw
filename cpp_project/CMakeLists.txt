@@ -3,7 +3,7 @@ project(cpp_project)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(ezfw/include)
+include_directories(ezfw/include cyder_project/include)
 add_subdirectory(ezfw)
 
 set(sources main.cpp)
