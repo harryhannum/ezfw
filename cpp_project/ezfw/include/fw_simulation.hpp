@@ -6,6 +6,10 @@
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
+#include <unordered_map>
+#include <functional>
+#include <future>
+#include <mutex>
 #include "detail/net.hpp"
 
 namespace ezfw
@@ -13,10 +17,15 @@ namespace ezfw
     class FwSimulation
     {
     public:
+        using IrqHandler = std::function<void(uint8_t)>;
+
         static FwSimulation& instance();
 
         uint64_t read(size_t addr, size_t size);
         void write(size_t addr, size_t size, uint64_t value);
+
+        bool register_irq_handler(uint8_t irq_id, IrqHandler handler);
+        void unregister_irq_handler(uint8_t irq_id);
 
     private:
         FwSimulation();
@@ -24,6 +33,9 @@ namespace ezfw
 
         WsaInitialiser _socket_init;
         Socket _socket;
+        std::mutex _irq_mutex;
+        std::unordered_map<uint8_t, IrqHandler> _irq_handlers;
+        std::unordered_map<uint8_t, std::future<uint64_t>> _pending_requests;
     };
 
     template<class T>

@@ -2,12 +2,11 @@
 
 #ifdef EZFW_SIMULATION
 
-#include "icd.hpp"
-
 #include <cstdio>
 #include <cerrno>
 #include <cstdlib>
 #include <cstring>
+#include "icd.hpp"
 
 #ifndef EZFW_SERVER_PORT
 #   define EZFW_SERVER_PORT 65432
@@ -170,6 +169,33 @@ namespace ezfw
         }
 
         std::abort();
+    }
+
+    bool FwSimulation::register_irq_handler(uint8_t irq_id, IrqHandler handler)
+    {
+        std::lock_guard<std::mutex> _irq{_irq_mutex};
+
+        auto v = _irq_handlers.find(irq_id);
+
+        if (v != _irq_handlers.end())
+        {
+            return false;
+        }
+
+        _irq_handlers.emplace(irq_id, std::move(handler));
+        return true;
+    }
+
+    void FwSimulation::unregister_irq_handler(uint8_t irq_id)
+    {
+        std::lock_guard<std::mutex> _irq{_irq_mutex};
+
+        auto v = _irq_handlers.find(irq_id);
+
+        if (v != _irq_handlers.end())
+        {
+            _irq_handlers.erase(v);
+        }
     }
 } // namespace ezfw
 
