@@ -7,12 +7,11 @@ use ieee.numeric_std.all;
 ENTITY TopLevel IS PORT(
     multiplier	 : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
     multiplicand : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+    result		 : OUT STD_LOGIC_VECTOR(63 DOWNTO 0);
     
     activate 	 : in std_logic;
 	clock		 : in std_logic;
-	valid		 : out std_logic;
-    
-    result		 : OUT STD_LOGIC_VECTOR(63 DOWNTO 0)
+	valid		 : out std_logic
 );
 END TopLevel;
 

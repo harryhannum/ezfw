@@ -24,13 +24,12 @@ ARCHITECTURE Arch OF ShiftableRegister IS
 BEGIN
     process(clock)
     begin
-        if clear = '1' then
-            internal <= (others => '0');
-        elsif rising_edge(clock) then
-            if load = '1' then
+    	if rising_edge(clock) then
+        	if clear = '1' then
+            	internal <= (others => '0');
+            elsif load = '1' then
                 internal <= input;
-            end if;
-            if shift = '1' then
+            elsif shift = '1' then
             	internal <= rotation_value & internal(N-1 downto 1);
             end if;
         end if;

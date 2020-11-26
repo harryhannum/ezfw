@@ -17,10 +17,10 @@ ARCHITECTURE Arch OF TestBench IS
     
     signal result		: STD_LOGIC_VECTOR(63 DOWNTO 0);
 BEGIN
-	clock <= not clock after 10 ns;
+	clock <= not clock after 20 ns;
 
 	TL_E : entity work.TopLevel(Arch)
-    	PORT MAP (multiplier, multiplicand, activate, clock, valid, result);
+    	PORT MAP (multiplier, multiplicand, result, activate, clock, valid);
     
     process
 	begin
@@ -42,7 +42,6 @@ BEGIN
                 report "result: " & integer'image((to_integer(unsigned(result))));
                 
                 assert to_integer(unsigned(result)) = (i * j) report "Wrong Result";
-
                 
 				wait for 50 ns;
 			end loop;
