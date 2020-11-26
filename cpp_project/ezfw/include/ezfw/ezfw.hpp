@@ -13,7 +13,8 @@
 #   define ACCESSOR(type)   ::ezfw::Accessor< ::ezfw::MemoryTarget<type>>
 #endif // !EZFW_SIMULATION
 
-namespace ezfw {
+namespace ezfw
+{
     template<class Target>
     struct Accessor
     {
@@ -41,20 +42,24 @@ namespace ezfw {
             std::is_unsigned<ValueType>::value,
             "Only unsigned types are supported as a memory target");
 
-        static inline ValueType read(size_t addr, ValueType mask, size_t offset) {
+        static inline ValueType read(size_t addr, ValueType mask, size_t offset)
+        {
             return (*reinterpret_cast<const volatile ValueType *>(addr) >> offset) & mask;
         }
 
-        static inline void write(size_t addr, ValueType mask, size_t offset, ValueType value) {
+        static inline void write(size_t addr, ValueType mask, size_t offset, ValueType value)
+        {
             *reinterpret_cast<const volatile ValueType *>(addr) = (value & mask) << offset;
         }
     };
 
-    namespace policies {
+    namespace policies
+    {
         template<class Target, size_t Addr, Target Mask, size_t Offset>
         struct ReadOnly
         {
-            static inline typename Target::ValueType read() {
+            static inline typename Target::ValueType read()
+            {
                 return Target::read(Addr, Mask, Offset);
             }
         };
@@ -62,7 +67,8 @@ namespace ezfw {
         template<class Target, size_t Addr, Target Mask, size_t Offset>
         struct WriteOnly
         {
-            static inline void write(typename Target::ValueType value) {
+            static inline void write(typename Target::ValueType value)
+            {
                 Target::write(Addr, Mask, Offset, value);
             }
         };
