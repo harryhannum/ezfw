@@ -2,23 +2,15 @@
 #include <cstdint>
 #include <cstdio>
 
-using namespace cyder_project;
-using namespace fpga_registers;
-
 uint32_t multiply(uint32_t lhs, uint32_t rhs)
 {
-    multiplier::LHS::write(lhs);
-    multiplier::RHS::write(rhs);
+    fpga_registers::multiplier::LHS::write(lhs);
+    fpga_registers::multiplier::RHS::write(rhs);
 
-    while (true)
-    {
-        if (multiplier::Status::read() == multiplier::READY_STATUS)
-        {
-            break;
-        }
-    }
+    while (fpga_registers::multiplier::Status::read() != fpga_registers::multiplier::READY_STATUS)
+        ;
 
-    return multiplier::Result::read();
+    return fpga_registers::multiplier::Result::read();
 }
 
 int main()

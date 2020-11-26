@@ -1,35 +1,22 @@
 #ifndef REGISTERS_H
 #define REGISTERS_H
 
-// #define USE_EZFW_SIMULATION
-
 #include "ezfw.hpp"
 #include <stdint.h>
 
-namespace cyder_project
+namespace fpga_registers
 {
-    namespace fpga_registers
+    using Accessor = ACCESSOR(uint32_t);
+
+    namespace multiplier
     {
-        using Accessor = ACCESSOR(uint32_t);
+        static constexpr uint32_t READY_STATUS = 1;
 
-        namespace multiplier
-        {
-            enum RegAddress : size_t
-            {
-                EStatus = 0x00000000,
-                ELHS = 0x00000004,
-                ERHS = 0x00000008,
-                EResult = 0x0000000c
-            };
-
-            static constexpr uint32_t READY_STATUS = 1;
-
-            using Status = Accessor::Register<ezfw::policies::ReadOnly, EStatus>;
-            using LHS = Accessor::Register<ezfw::policies::WriteOnly, ELHS>;
-            using RHS = Accessor::Register<ezfw::policies::WriteOnly, ERHS>;
-            using Result = Accessor::Register<ezfw::policies::ReadOnly, EResult>;
-        }
-    }
-}
+        using Status = Accessor::Register<ezfw::policies::ReadOnly, 0x00000000>;
+        using LHS = Accessor::Register<ezfw::policies::WriteOnly, 0x00000004>;
+        using RHS = Accessor::Register<ezfw::policies::WriteOnly, 0x00000008>;
+        using Result = Accessor::Register<ezfw::policies::ReadOnly, 0x0000000c>;
+    } // namespace multiplier
+} // namespace fpga_registers
 
 #endif //REGISTERS_H
