@@ -26,7 +26,7 @@ namespace ezfw
         struct Register : public MutabilityPolicy<typename Target::ValueType, Addr, Mask, Offset>
         {
             static_assert(
-                Offset < (CHAR_BIT * sizeof(Target::ValueType)), "Offset must not exceed the target value type");
+                Offset < (CHAR_BIT * sizeof(typename Target::ValueType)), "Offset must not exceed the target value type");
             static_assert(
                 (((Mask << Offset) & std::numeric_limits<typename Target::ValueType>::max()) >> Offset) == Mask,
                 "Mask must not exceed the target value type when offset");
