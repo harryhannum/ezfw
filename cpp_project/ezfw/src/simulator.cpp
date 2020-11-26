@@ -1,5 +1,5 @@
-#include "ezfw/simulator.hpp"
-#include "ezfw/icd.hpp"
+#include "simulator.hpp"
+#include "icd.hpp"
 #include <cstdlib>
 #include <cstdio>
 

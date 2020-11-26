@@ -1,17 +1,17 @@
-#ifndef CPP_PROJECT_EZFW_HPP
-#define CPP_PROJECT_EZFW_HPP
+#ifndef EZFW_HPP
+#define EZFW_HPP
 
 #include <cstddef>
-#include <limits>
 #include <climits>
+#include <limits>
 #include <type_traits>
-#include <cstdint>
 
-#ifndef USE_EZFW_SIMULATION
-#   define ACCESSOR ::ezfw::Accessor<::ezfw::MemoryTarget<uint32_t>>
-#else // ifdef USE_EZFW
-#   define ACCESSOR ::ezfw::Accessor<::ezfw::SimulatorTarget<uint32_t>>
-#endif // !USE_EZFW
+#ifdef EZFW_SIMULATION
+#   include "ezfw/fw_simulation.hpp"
+#   define ACCESSOR(type)   ::ezfw::Accessor< ::ezfw::SimulatedTarget<type>>
+#else // if !EZFW_SIMULATION
+#   define ACCESSOR(type)   ::ezfw::Accessor< ::ezfw::MemoryTarget<type>>
+#endif // !EZFW_SIMULATION
 
 namespace ezfw {
     template<class Target>
@@ -25,10 +25,10 @@ namespace ezfw {
         struct Register : public MutabilityPolicy<typename Target::ValueType, Addr, Mask, Offset>
         {
             static_assert(
-                    Offset < (CHAR_BIT * sizeof(Target::ValueType)), "Offset must not exceed the target value type");
+                Offset < (CHAR_BIT * sizeof(Target::ValueType)), "Offset must not exceed the target value type");
             static_assert(
-                    (((Mask << Offset) & std::numeric_limits<typename Target::ValueType>::max()) >> Offset) == Mask,
-                    "Mask must not exceed the target value type when offset");
+                (((Mask << Offset) & std::numeric_limits<typename Target::ValueType>::max()) >> Offset) == Mask,
+                "Mask must not exceed the target value type when offset");
         };
     };
 
@@ -54,7 +54,7 @@ namespace ezfw {
         template<class Target, size_t Addr, Target Mask, size_t Offset>
         struct ReadOnly
         {
-            static inline typename Target::value_type read() {
+            static inline typename Target::ValueType read() {
                 return Target::read(Addr, Mask, Offset);
             }
         };
@@ -62,7 +62,7 @@ namespace ezfw {
         template<class Target, size_t Addr, Target Mask, size_t Offset>
         struct WriteOnly
         {
-            static inline void write(typename Target::value_type value) {
+            static inline void write(typename Target::ValueType value) {
                 Target::write(Addr, Mask, Offset, value);
             }
         };
@@ -74,6 +74,6 @@ namespace ezfw {
         {
         };
     }
-}
+} // namespace ezfw
 
-#endif //CPP_PROJECT_EZFW_HPP
+#endif /* !EZFW_HPP */
