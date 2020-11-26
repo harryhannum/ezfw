@@ -8,7 +8,8 @@
 #include <type_traits>
 #include "detail/net.hpp"
 
-namespace ezfw {
+namespace ezfw
+{
     class FwSimulation
     {
     public:
@@ -32,11 +33,13 @@ namespace ezfw {
             std::is_unsigned<ValueType>::value, "Only unsigned types are supported as a simulated target");
         static_assert(sizeof(uint64_t) >= sizeof(ValueType), "Only up to 64-bit value types are supported");
 
-        static inline ValueType read(size_t addr, ValueType mask, size_t offset) {
+        static inline ValueType read(size_t addr, ValueType mask, size_t offset)
+        {
             return static_cast<ValueType>(FwSimulation::instance().read(addr, sizeof(ValueType)) >> offset) & mask;
         }
 
-        static inline void write(size_t addr, ValueType mask, size_t offset, ValueType value) {
+        static inline void write(size_t addr, ValueType mask, size_t offset, ValueType value)
+        {
             FwSimulation::instance().write(addr, sizeof(ValueType), static_cast<uint64_t>((value & mask) << offset));
         }
     };
