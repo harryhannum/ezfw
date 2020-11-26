@@ -7,4 +7,4 @@ include_directories(ezfw/include)
 add_subdirectory(ezfw)
 
 set(sources main.cpp)
-add_executable(cpp_project ${sources})
+add_executable(cpp_project ${sources} ezfw)
