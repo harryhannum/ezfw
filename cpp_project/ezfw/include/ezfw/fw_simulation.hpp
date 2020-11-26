@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
+#include "detail/net.hpp"
 
 namespace ezfw {
     class FwSimulation
@@ -18,6 +19,8 @@ namespace ezfw {
 
     private:
         FwSimulation();
+
+        Socket _socket;
     };
 
     template<class T>
