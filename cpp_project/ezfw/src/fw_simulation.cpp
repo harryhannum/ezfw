@@ -47,14 +47,17 @@ namespace ezfw
         icd::request::ReadRequest request{};
         request.addr = addr;
 
-        if (send(_socket, reinterpret_cast<const char *>(&header), sizeof(header), 0) != sizeof(header) ||
-            send(_socket, reinterpret_cast<const char *>(&request), sizeof(request), 0) != sizeof(request))
+        uint8_t buffer[sizeof(header) + sizeof(request)];
+        memcpy(buffer, &header, sizeof(header));
+        memcpy(buffer + sizeof(header), &request, sizeof(request));
+
+        if (::send(_socket, buffer, sizeof(buffer), 0) != sizeof(buffer))
         {
             std::fprintf(stderr, "ERROR: failed to send read request\n");
             std::abort();
         }
 
-        if (recv(_socket, reinterpret_cast<char *>(&header), sizeof(header), 0) != sizeof(header))
+        if (::recv(_socket, reinterpret_cast<char *>(&header), sizeof(header), 0) != sizeof(header))
         {
             std::fprintf(stderr, "ERROR: failed to recv read response header\n");
             std::abort();
@@ -111,14 +114,17 @@ namespace ezfw
         request.addr = addr;
         request.value = value;
 
-        if (send(_socket, reinterpret_cast<const char *>(&header), sizeof(header), 0) != sizeof(header) ||
-            send(_socket, reinterpret_cast<const char *>(&request), sizeof(request), 0) != sizeof(request))
+        uint8_t buffer[sizeof(header) + sizeof(request)];
+        memcpy(buffer, &header, sizeof(header));
+        memcpy(buffer + sizeof(header), &request, sizeof(request));
+
+        if (::send(_socket, buffer, sizeof(buffer), 0) != sizeof(buffer))
         {
             std::fprintf(stderr, "ERROR: failed to send write request\n");
             std::abort();
         }
 
-        if (recv(_socket, reinterpret_cast<char *>(&header), sizeof(header), 0) != sizeof(header))
+        if (::recv(_socket, reinterpret_cast<char *>(&header), sizeof(header), 0) != sizeof(header))
         {
             std::fprintf(stderr, "ERROR: failed to recv write response header\n");
             std::abort();
