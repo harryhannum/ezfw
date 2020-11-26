@@ -10,7 +10,7 @@ uint32_t multiply(uint32_t lhs, uint32_t rhs)
 
     while (true)
     {
-        if (multiplier::Status::read() == READY_STATUS)
+        if (multiplier::Status::read() == multiplier::READY_STATUS)
         {
             break;
         }
