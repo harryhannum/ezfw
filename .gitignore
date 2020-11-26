@@ -1,4 +1,3 @@
-
 cpp_project/.idea/
-
 cpp_project/cmake-build-debug/
+*.pyc
