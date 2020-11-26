@@ -4,7 +4,7 @@ import threading
 import queue
 from messages import *
 import socket
-from mock_client import MockFirmWare
+from mock_firmware import MultiplierModule
 
 
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
@@ -15,23 +15,20 @@ requests_queue = queue.Queue()
 responses_queue = queue.Queue()
 
 
-fw = MockFirmWare()
+fw = MultiplierModule()
 
 
 def write_to_vhdl(address, value):
     # send to vhdl - YUVAL IMPLEMENTATION
     global fw
     fw.write(address, value)
-    print("wrote")
     return True or (address - value)
 
 
 def read_from_vhdl(address):
     # YUVAL IMPLEMENTATION
     global fw
-    value = fw.read(address)
-    print("read")
-    return value
+    return fw.read(address)
 
 
 def send_nack(session, error_code):
@@ -96,7 +93,6 @@ def main():
                         send_nack(0, 1)
                         continue
                     rest_of_msg = conn.recv(lengths[opcode[0]] - 1)
-                    print('opcode:', opcode, 'rest:', rest_of_msg)
                     requests_queue.put(opcode + rest_of_msg)
 
                     response = responses_queue.get()

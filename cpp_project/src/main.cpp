@@ -18,5 +18,8 @@ int main()
     uint32_t result = multiply(3, 5);
     printf("result = %u\r\n", result);
 
+    result = multiply(10, 15);
+    printf("result = %u\r\n", result);
+
     return 0;
 }
