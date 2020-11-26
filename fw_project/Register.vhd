@@ -2,6 +2,7 @@
 -- Code your design here
 library IEEE;
 use IEEE.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 ENTITY ShiftableRegister IS 
 GENERIC(N: integer := 31);
@@ -25,7 +26,7 @@ BEGIN
     begin
         if clear = '1' then
             internal <= (others => '0');
-        elsif rising_edge(clk) then
+        elsif rising_edge(clock) then
             if load = '1' then
                 internal <= input;
             end if;

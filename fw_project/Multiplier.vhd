@@ -2,6 +2,7 @@
 -- Code your design here
 library IEEE;
 use IEEE.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 ENTITY MultiplierManager IS PORT(
 	current_multiplied_bit 	: IN STD_LOGIC;
@@ -24,12 +25,12 @@ ARCHITECTURE Arch OF MultiplierManager IS
 BEGIN
 	init_ff <= '1' when state = Start else '0';
 	add_request <= '1' when state = Adding else '0';
-	shift_result <= '1' when state = Shifting else '0';
+	shift_request <= '1' when state = Shifting else '0';
     valid <= '1' when state = Finish else '0';
 
-	process(clk)
+	process(clock)
 	begin
-		if rising_edge(Clk) then
+		if rising_edge(clock) then
 			case state is
 				when Finish => 
                 	if activate = '1' then
