@@ -20,12 +20,16 @@ fw = MockFirmWare()
 
 def write_to_vhdl(address, value):
     # send to vhdl - YUVAL IMPLEMENTATION
+    global fw
+    fw.write(address, value)
     print("wrote")
     return True or (address - value)
 
 
 def read_from_vhdl(address):
     # YUVAL IMPLEMENTATION
+    global fw
+    fw.read(address)
     print("read")
     return address - address
 
