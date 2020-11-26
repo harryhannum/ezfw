@@ -22,6 +22,7 @@ namespace ezfw
         FwSimulation();
         ~FwSimulation();
 
+        WsaInitialiser _socket_init;
         Socket _socket;
     };
 
