@@ -29,5 +29,24 @@ def main():
         t2.join()
 
 
+class MockFirmWare:
+    FIRST_REG = 4
+    SECOND_REG = 8
+    STATUS_REG = 0
+    RES_REG = 12
+
+    def __init__(self):
+        self.regs = {}
+
+    def read(self, addr):
+        return self.regs[addr]
+
+    def write(self, addr, val):
+        self.reg[addr] = val
+        if self.regs[MockFirmWare.FIRST_REG] is not None and self.regs[MockFirmWare.SECOND_REG] is not None:
+            self.regs[MockFirmWare.RES_REG] = self.regs[MockFirmWare.FIRST_REG] * self.regs[MockFirmWare.SECOND_REG]
+            self.regs[MockFirmWare.STATUS_REG] = 1
+
+
 if __name__ == "__main__":
     main()
