@@ -24,7 +24,7 @@ uint32_t multiply(uint32_t lhs, uint32_t rhs)
 int main()
 {
     uint32_t result = multiply(3, 5);
-    printf("result = %u", result);
+    printf("result = %u\r\n", result);
 
     return 0;
 }

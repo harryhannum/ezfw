@@ -20,6 +20,7 @@ namespace ezfw
 
     private:
         FwSimulation();
+        ~FwSimulation();
 
         Socket _socket;
     };

@@ -22,7 +22,7 @@ namespace cyder_project
                 EResult = 0x0000000c
             };
 
-            static constexpr uint32_t READY_STATUS = 0xFACEB00C;
+            static constexpr uint32_t READY_STATUS = 1;
 
             using Status = Accessor::Register<ezfw::policies::ReadOnly, EStatus>;
             using LHS = Accessor::Register<ezfw::policies::WriteOnly, ELHS>;
