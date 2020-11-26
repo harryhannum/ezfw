@@ -3,8 +3,9 @@ project(cpp_project)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(ezfw/include)
-add_subdirectory(ezfw)
+add_definitions(-DEZFW_SIMULATION)
 
-set(sources main.cpp)
+include_directories(ezfw/include cyder_project/include)
+
+file(GLOB_RECURSE sources src/*.cpp ezfw/src/*.cpp)
 add_executable(cpp_project ${sources} ezfw)

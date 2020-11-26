@@ -23,13 +23,13 @@ class Header(Struct):
 
 class WriteRequest(Struct):
     header = Header(opcode=Opcode.WRITE_REQUEST.value)
-    address = UInt32
-    value = UInt32
+    address = UInt64
+    value = UInt64
 
 
 class ReadRequest(Struct):
     header = Header(opcode=Opcode.READ_REQUEST.value)
-    address = UInt32
+    address = UInt64
 
 
 class WriteAck(Struct):
@@ -38,12 +38,12 @@ class WriteAck(Struct):
 
 class Nack(Struct):
     header = Header(opcode=Opcode.NACK.value)
-    error_code = UInt32
+    error_code = UInt64
 
 
 class ReadResponse(Struct):
     header = Header(opcode=Opcode.READ_RESPONSE.value)
-    value = UInt32
+    value = UInt64
 
 
 lengths = {
