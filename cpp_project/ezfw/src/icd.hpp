@@ -10,6 +10,7 @@ namespace ezfw
         struct Header
         {
             uint8_t opcode;
+            uint8_t session;
         };
 
         namespace request

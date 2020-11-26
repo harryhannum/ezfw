@@ -7,7 +7,7 @@
 #include <type_traits>
 
 #ifdef EZFW_SIMULATION
-#   include "ezfw/fw_simulation.hpp"
+#   include "fw_simulation.hpp"
 #   define ACCESSOR(type)   ::ezfw::Accessor< ::ezfw::SimulatedTarget<type>>
 #else // if !EZFW_SIMULATION
 #   define ACCESSOR(type)   ::ezfw::Accessor< ::ezfw::MemoryTarget<type>>

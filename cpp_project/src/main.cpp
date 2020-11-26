@@ -1,5 +1,6 @@
 #include "registers.hpp"
-#include <stdint.h>
+#include <cstdint>
+#include <cstdio>
 
 using namespace cyder_project;
 using namespace fpga_registers;

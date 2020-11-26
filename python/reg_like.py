@@ -27,7 +27,7 @@ def read_from_vhdl(address):
 
 
 def send_nack(session, error_code):
-    n = Nack(header=Header(session=session), error_code=error_code)
+    n = Nack(header=Header(opcode=Opcode.NACK.value, session=session), error_code=error_code)
     responses_queue.put(n.serialize())
     print("sent nack with error code: " + str(error_code) + " and session " + str(session))
 
@@ -35,7 +35,7 @@ def send_nack(session, error_code):
 def handle_read_request(msg):
     m = ReadRequest.from_bytes(msg)
     value = read_from_vhdl(m.address)
-    response = ReadResponse(header=Header(session=m.header.session), value=value)
+    response = ReadResponse(header=Header(opcode=Opcode.READ_RESPONSE.value, session=m.header.session), value=value)
     responses_queue.put(response.serialize())
 
 
@@ -47,7 +47,7 @@ def handle_write_request(msg):
     m = WriteRequest.from_bytes(msg)
     write_status = write_to_vhdl(m.address, m.value)
     if write_status:
-        response = WriteAck(header=Header(session=m.header.session))
+        response = WriteAck(header=Header(opcode=Opcode.WRITE_ACK.value, session=m.header.session))
         responses_queue.put(response.serialize())
     else:
         send_nack(m.header.session, WRITE_FAIL)
@@ -88,6 +88,7 @@ def main():
                         send_nack(0, 1)
                         continue
                     rest_of_msg = conn.recv(lengths[opcode[0]] - 1)
+                    print('opcode:', opcode, 'rest:', rest_of_msg)
                     requests_queue.put(opcode + rest_of_msg)
 
                     response = responses_queue.get()

@@ -8,7 +8,7 @@
 #include "icd.hpp"
 
 #ifndef EZFW_SERVER_PORT
-#   define EZFW_SERVER_PORT 51337
+#   define EZFW_SERVER_PORT 65432
 #endif // !EZFW_SERVER_PORT
 
 namespace ezfw
