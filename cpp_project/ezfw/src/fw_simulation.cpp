@@ -2,10 +2,12 @@
 
 #ifdef EZFW_SIMULATION
 
+#include "icd.hpp"
+
 #include <cstdio>
 #include <cerrno>
 #include <cstdlib>
-#include "icd.hpp"
+#include <cstring>
 
 #ifndef EZFW_SERVER_PORT
 #   define EZFW_SERVER_PORT 65432
@@ -36,6 +38,14 @@ namespace ezfw
         {
             std::fprintf(stderr, "ERROR: failed to connect socket (%d)\n", errno);
             std::abort();
+        }
+    }
+
+    FwSimulation::~FwSimulation()
+    {
+        if (_socket != INVALID_SOCKET)
+        {
+            closesocket(_socket);
         }
     }
 

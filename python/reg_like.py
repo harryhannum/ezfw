@@ -20,18 +20,18 @@ fw = MockFirmWare()
 
 def write_to_vhdl(address, value):
     # send to vhdl - YUVAL IMPLEMENTATION
-    global fw 
-    fw.write(address, value) 
+    global fw
+    fw.write(address, value)
     print("wrote")
     return True or (address - value)
 
 
 def read_from_vhdl(address):
     # YUVAL IMPLEMENTATION
-    global fw 
-    fw.read(address) 
+    global fw
+    value = fw.read(address)
     print("read")
-    return address - address
+    return value
 
 
 def send_nack(session, error_code):
@@ -42,7 +42,7 @@ def send_nack(session, error_code):
 
 def handle_read_request(msg):
     m = ReadRequest.from_bytes(msg)
-    value = read_from_vhdl(m.address)
+    value = read_from_vhdl(m.address.value)
     response = ReadResponse(header=Header(opcode=Opcode.READ_RESPONSE.value, session=m.header.session), value=value)
     responses_queue.put(response.serialize())
 
@@ -53,7 +53,7 @@ WRITE_FAIL = 0x13
 
 def handle_write_request(msg):
     m = WriteRequest.from_bytes(msg)
-    write_status = write_to_vhdl(m.address, m.value)
+    write_status = write_to_vhdl(m.address.value, m.value.value)
     if write_status:
         response = WriteAck(header=Header(opcode=Opcode.WRITE_ACK.value, session=m.header.session))
         responses_queue.put(response.serialize())

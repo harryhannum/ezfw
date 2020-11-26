@@ -36,14 +36,18 @@ class MockFirmWare:
     RES_REG = 12
 
     def __init__(self):
-        self.regs = {}
+        self.regs = {MockFirmWare.STATUS_REG: 0}
 
     def read(self, addr):
-        return self.regs[addr]
+        result = self.regs[addr]
+        print('reading', result)
+        return result
 
     def write(self, addr, val):
-        self.reg[addr] = val
-        if self.regs[MockFirmWare.FIRST_REG] is not None and self.regs[MockFirmWare.SECOND_REG] is not None:
+        print('write:', addr, val)
+        self.regs[addr] = val
+        if MockFirmWare.FIRST_REG in self.regs and MockFirmWare.SECOND_REG in self.regs:
+            print('now')
             self.regs[MockFirmWare.RES_REG] = self.regs[MockFirmWare.FIRST_REG] * self.regs[MockFirmWare.SECOND_REG]
             self.regs[MockFirmWare.STATUS_REG] = 1
 
