@@ -28,23 +28,25 @@ ARCHITECTURE Arch OF TopLevel IS
 	signal add_request 	 : std_logic;
 BEGIN
 	Manager_E : entity work.MultiplierManager(Arch)
+    	GENERIC MAP (5)
     	PORT MAP (clock, shifting_multiplier(0), activate, init_ff, shift_request, add_request, valid);
     
     Adder_E : entity work.VectorAdder(Arch)
+    	GENERIC MAP (32)
     	PORT MAP (adder_result(31 downto 0), shifting_multiplicand, progressive_result);
 
 	Multiplicand_E : entity work.ShiftableRegister(Arch)
-    	GENERIC MAP (31)
+    	GENERIC MAP (32)
     	PORT MAP (multiplicand, shifting_multiplicand, clock, init_ff, '0', '0', '0');
         
 	Multiplier_E : entity work.ShiftableRegister(Arch)
-    	GENERIC MAP (31)
-    	PORT MAP (multiplier, shifting_multiplier, clock, init_ff, shift_request, '0', adder_result(0));
+    	GENERIC MAP (32)
+    	PORT MAP (multiplier, shifting_multiplier, clock, init_ff, '0', shift_request, adder_result(0));
 	
     Progression_E : entity work.ShiftableRegister(Arch)
-    	GENERIC MAP (32)
+    	GENERIC MAP (33)
     	PORT MAP (progressive_result, adder_result, clock, 
-        		  add_request, shift_request, init_ff, '0');
+        		  add_request, init_ff, shift_request, '0');
     
     result <= adder_result(31 downto 0) & shifting_multiplier;
 END Arch;

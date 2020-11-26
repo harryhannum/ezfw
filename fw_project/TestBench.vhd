@@ -11,9 +11,9 @@ ARCHITECTURE Arch OF TestBench IS
     signal multiplier	: STD_LOGIC_VECTOR(31 DOWNTO 0);
     signal multiplicand : STD_LOGIC_VECTOR(31 DOWNTO 0);
     
-    signal activate 	: std_logic;
-	signal clock		: std_logic;
-	signal valid		: std_logic;
+    signal activate 	: std_logic := '0';
+	signal clock 		: std_logic := '0';
+	signal valid		: std_logic := '0';
     
     signal result		: STD_LOGIC_VECTOR(63 DOWNTO 0);
 BEGIN
@@ -25,19 +25,30 @@ BEGIN
     process
 	begin
     	report "Start";
-		for i in 15 downto 0 loop
+        
+		for i in 1 to 10 loop
 			multiplier <= std_logic_vector(to_unsigned(i,32));
-			for j in 15 downto 0 loop
+
+			for j in 1 to 10 loop
 				multiplicand <= std_logic_vector(to_unsigned(j,32));
+                
 				activate <= '0', '1' after 5 ns, '0' after 40 ns;
 				wait for 50 ns;
 				wait until valid = '1';
-                assert (to_integer(unsigned(result)) = (i * j)) report "Wrong Result" severity NOTE;
-                report "The value of 'result' is " & integer'image((to_integer(unsigned(result))));
-                report "The value of 'i * j' is " & integer'image(i * j);
+                                
+                report "i: " & integer'image(i);
+                report "j: " & integer'image(j);
+                report "i * j: " & integer'image(i * j);
+                report "result: " & integer'image((to_integer(unsigned(result))));
+                
+                assert to_integer(unsigned(result)) = (i * j) report "Wrong Result";
+
+                
 				wait for 50 ns;
 			end loop;
 		end loop;
-        wait for 500 ns;
+        
+        report "End";
+        wait;
 	end process;
 END Arch;
